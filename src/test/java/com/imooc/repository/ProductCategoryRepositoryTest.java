@@ -1,12 +1,15 @@
 package com.imooc.repository;
 
 import com.imooc.model.ProductCategory;
-import lombok.extern.slf4j.Slf4j;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author Zhang Pengnian
@@ -27,11 +30,19 @@ public class ProductCategoryRepositoryTest {
 
     @Test
     public void saveTest() {
-        ProductCategory productCategory = new ProductCategory();
-        productCategory.setCategoryId(3);
-        productCategory.setCategoryName("类目名称2");
-        productCategory.setCategoryType(1);
-        repository.save(productCategory);
+        ProductCategory productCategory = new ProductCategory("女生最爱", 4);
+        ProductCategory result = repository.save(productCategory);
+        Assert.assertNotNull(result);
+//        Assert.assertNotEquals(null, result);
     }
 
+    @Test
+    public void findByCategoryTypeInTest() {
+        List<Integer> categoryTypeList = Arrays.asList(1, 2, 3);
+        List<ProductCategory> result = repository.findByCategoryTypeIn(categoryTypeList);
+        Assert.assertNotEquals(0, result);
+        for (ProductCategory pc : result) {
+            System.out.println(pc.toString());
+        }
+    }
 }

@@ -1,5 +1,6 @@
 package com.imooc.model;
 
+import lombok.Data;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.Entity;
@@ -13,6 +14,7 @@ import java.util.Date;
  */
 @Entity
 @DynamicUpdate
+@Data
 public class ProductCategory {
 
     /**
@@ -42,52 +44,19 @@ public class ProductCategory {
      */
     private Date updateTime;
 
-    public Integer getCategoryId() {
-        return categoryId;
+    public ProductCategory() {
     }
 
-    public void setCategoryId(Integer categoryId) {
-        this.categoryId = categoryId;
-    }
-
-    public String getCategoryName() {
-        return categoryName;
-    }
-
-    public void setCategoryName(String categoryName) {
+    public ProductCategory(String categoryName, int categoryType) {
         this.categoryName = categoryName;
-    }
-
-    public int getCategoryType() {
-        return categoryType;
-    }
-
-    public void setCategoryType(int categoryType) {
         this.categoryType = categoryType;
     }
 
-    @Override
-    public String toString() {
-        return "ProductCategory{" +
-                "categoryId=" + categoryId +
-                ", categoryName='" + categoryName + '\'' +
-                ", categoryType=" + categoryType +
-                '}';
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
+    public ProductCategory(String categoryName, int categoryType,
+                           Date createTime, Date updateTime) {
+        this.categoryName = categoryName;
+        this.categoryType = categoryType;
         this.createTime = createTime;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
 }
