@@ -21,8 +21,10 @@ public class LoggerTest {
 
     @Test
     public void test1() {
+        String name = "imooc";
+        String password = "123456";
         logger.debug("debug...");
-        logger.info("info...");
+        logger.info("name: {}, password: {}", name, password);
         logger.error("error...");
 
     }
