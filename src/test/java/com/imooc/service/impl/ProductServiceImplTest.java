@@ -2,6 +2,7 @@ package com.imooc.service.impl;
 
 import com.imooc.enums.ProductStatusEnum;
 import com.imooc.model.ProductInfo;
+import com.imooc.utils.SnowFlake;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,9 +25,16 @@ public class ProductServiceImplTest {
 
     private ProductServiceImpl service;
 
+    private SnowFlake snowFlake;
+
     @Autowired
     public void setService(ProductServiceImpl service) {
         this.service = service;
+    }
+
+    @Autowired
+    public void setSnowFlake(SnowFlake snowFlake) {
+        this.snowFlake = snowFlake;
     }
 
     @Test
@@ -51,11 +59,11 @@ public class ProductServiceImplTest {
     @Test
     public void save() {
         ProductInfo productInfo = new ProductInfo();
-        productInfo.setProductId("123457");
-        productInfo.setProductName("番茄牛肉粥");
-        productInfo.setProductPrice(new BigDecimal("5.9"));
+        productInfo.setProductId(String.valueOf(snowFlake.nextId()));
+        productInfo.setProductName("西班牙海鲜饭");
+        productInfo.setProductPrice(new BigDecimal("29.9"));
         productInfo.setProductStock(100);
-        productInfo.setProductDescription("很好喝的番茄牛肉粥");
+        productInfo.setProductDescription("西班牙海鲜饭（Paella，音译为巴埃加），西餐三大名菜之一，与法国蜗牛、意大利面齐名。西班牙海鲜饭卖相绝佳，黄澄澄的饭粒出自名贵的香料藏红花，饭中点缀着无数虾子、螃蟹、黑蚬、蛤、牡蛎、鱿鱼……热气腾腾，令人垂涎。");
         productInfo.setProductIcon("https://gss0.bdstatic.com/94o3dSag_xI4khGkpoWK1HF6hhy/baike/c0%3Dbaike80%2C5%2C5%2C80%2C26/sign=2de72c2923a446236ac7ad30f94b196b/574e9258d109b3dedc47b23bcfbf6c81810a4cec.jpg");
         productInfo.setProductStatus(ProductStatusEnum.UP.getCode());
         productInfo.setCategoryType(2);

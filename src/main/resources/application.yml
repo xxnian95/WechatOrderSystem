@@ -11,8 +11,10 @@ spring:
 #  redis:
 #    host: 192.168.30.113
 #    port: 6379
-#server:
-#  context-path: /sell
+
+server:
+  context-path: /sell
+
 #logging:
 #  pattern:
 #    console: "%d - %msg%n"
