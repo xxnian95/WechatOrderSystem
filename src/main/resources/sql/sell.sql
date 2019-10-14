@@ -6,6 +6,7 @@ create table `product_info`
     `product_stock`       int           not null comment '库存',
     `product_description` varchar(64) comment '描述',
     `product_icon`        varchar(512) comment '小图',
+    `product_status`      int           not null comment '商品状态，0正常，1下架',
     `category_type`       int           not null comment '类目编号',
     `create_time`         timestamp     not null default current_timestamp comment '创建时间',
 #     ON UPDATE可使字段由MySQL自动更新，不用写在程序里
