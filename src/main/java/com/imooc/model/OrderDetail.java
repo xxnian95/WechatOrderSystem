@@ -34,6 +34,7 @@ public class OrderDetail {
 
     /**
      * 商品单价
+     * 一定要从数据库读取。
      */
     private BigDecimal productPrice;
 
