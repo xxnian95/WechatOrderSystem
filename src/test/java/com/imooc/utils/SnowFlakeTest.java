@@ -14,8 +14,8 @@ public class SnowFlakeTest {
     @Test
     public void snowFlakeTest() {
         SnowFlake snowFlake = new SnowFlake();
-        System.out.println(snowFlake.nextId());
-        System.out.println(snowFlake.nextId());
+        System.out.println(snowFlake.nextId("OrderDetail"));
+        System.out.println(snowFlake.nextId("Order"));
     }
 
 }

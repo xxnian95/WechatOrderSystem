@@ -41,8 +41,9 @@ public class SnowFlake {
         this.datacenterId = datacenterId;
         this.machineId = machineId;
     }
+
     //产生下一个ID
-    public synchronized long nextId() {
+    private synchronized long nextId() {
         long currStmp = getNewstmp();
         if (currStmp < lastStmp) {
             throw new RuntimeException("Clock moved backwards.  Refusing to generate id");
@@ -67,6 +68,14 @@ public class SnowFlake {
                 | datacenterId << DATACENTER_LEFT      //数据中心部分
                 | machineId << MACHINE_LEFT            //机器标识部分
                 | sequence;                            //序列号部分
+    }
+
+    public synchronized String nextId(String s) {
+        if (s == null || "".equals(s)) {
+            return String.valueOf(this.nextId());
+        }
+        this.datacenterId = Math.abs(s.hashCode());
+        return String.valueOf(this.nextId());
     }
 
     private long getNextMill() {
