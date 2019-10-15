@@ -59,7 +59,7 @@ public class ProductServiceImplTest {
     @Test
     public void save() {
         ProductInfo productInfo = new ProductInfo();
-        productInfo.setProductId(String.valueOf(snowFlake.nextId()));
+        productInfo.setProductId(String.valueOf(snowFlake.nextId("Product")));
         productInfo.setProductName("西班牙海鲜饭");
         productInfo.setProductPrice(new BigDecimal("29.9"));
         productInfo.setProductStock(100);
