@@ -6,7 +6,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.math.BigDecimal;
@@ -48,5 +47,12 @@ public class ProductInfoRepositoryTest {
         List<ProductInfo> productInfoList = repository.findByProductStatus(0);
         Assert.assertNotEquals(0, productInfoList.size());
 
+    }
+
+    @Test
+    public void findByProductName() {
+        String productName = "西班牙海鲜饭";
+        ProductInfo productInfo = repository.findByProductName(productName);
+        Assert.assertEquals(productName, productInfo.getProductName());
     }
 }

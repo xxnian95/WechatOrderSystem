@@ -22,6 +22,12 @@ public interface ProductService {
     ProductInfo findOne(String productId);
 
     /**
+     * 通过商品名称查找商品
+     * @param productName 商品名称的字符串
+     * @return 商品信息ProductInfo
+     */
+    ProductInfo findByProductName(String productName);
+    /**
      * 客户端查询在架的所有商品的列表
      *
      * @return 在架的商品列表

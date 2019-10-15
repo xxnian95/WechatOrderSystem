@@ -20,4 +20,11 @@ public interface ProductInfoRepository
      */
     List<ProductInfo> findByProductStatus(Integer productStatus);
 
+    /**
+     * 用商品的名字来查询商品
+     * @param productName 商品名
+     * @return 商品
+     */
+    ProductInfo findByProductName(String productName);
+
 }

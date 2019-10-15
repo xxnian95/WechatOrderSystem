@@ -44,6 +44,12 @@ public class ProductServiceImplTest {
     }
 
     @Test
+    public void findByProductNameTest() {
+        ProductInfo productInfo = service.findByProductName("芝士焗扇贝");
+        Assert.assertEquals("芝士焗扇贝", productInfo.getProductName());
+    }
+
+    @Test
     public void findUpAll() {
         List<ProductInfo> productInfoList = service.findUpAll();
         Assert.assertNotEquals(0, productInfoList.size());
