@@ -170,7 +170,7 @@ public class OrderServiceImpl implements OrderService {
      * 取消订单
      * Transactional注解没有发挥作用，订单状态修改之后，如果抛出异常，并不会回滚
      * 根据阿里Java规范的报错，不能依赖抛出异常回滚事务，应当显式地指定回滚事务的操作。
-     *
+     * <p>
      * 在Transactional注解当中指定rollbackOn可以解决这个问题。
      * 可能原因：自己定义的SellException虽然实现了RuntimeException，但是无法触发
      * Transactional注解的自动回滚。
@@ -182,7 +182,6 @@ public class OrderServiceImpl implements OrderService {
     @Transactional(rollbackOn = {SellException.class})
     public OrderDTO cancel(OrderDTO orderDTO) {
         OrderMaster orderMaster = new OrderMaster();
-        PropertiesCopyUtils.copyProperties(orderDTO, orderMaster);
 
         // 1. 判断订单状态
         if (!orderDTO.getOrderStatus().equals(OrderStatusEnum.NEW.getCode())) {
@@ -192,7 +191,8 @@ public class OrderServiceImpl implements OrderService {
         }
 
         // 2. 修改订单状态
-        orderMaster.setOrderStatus(OrderStatusEnum.CANCELED.getCode());
+        orderDTO.setOrderStatus(OrderStatusEnum.CANCELED.getCode());
+        PropertiesCopyUtils.copyProperties(orderDTO, orderMaster);
         OrderMaster updateResult = orderMasterRepository.save(orderMaster);
         if (updateResult == null) {
             log.error("【取消订单】更新失败，orderMaster = {}", orderMaster);
@@ -222,8 +222,7 @@ public class OrderServiceImpl implements OrderService {
         这里如果直接返回orderDTO，对象中的订单状态并不会改变。需要重新从数据库中读取信息并
         返回（我也不知道这是为啥）。
          */
-        return OrderMaster2OrderDTOConverter
-                .convert(orderMasterRepository.findOne(updateResult.getOrderId()));
+        return orderDTO;
     }
 
     /**
@@ -233,8 +232,27 @@ public class OrderServiceImpl implements OrderService {
      * @return DTO
      */
     @Override
+    @Transactional(rollbackOn = {SellException.class})
     public OrderDTO finish(OrderDTO orderDTO) {
-        return null;
+        // 1. 判断订单状态
+        // TODO 能够对订单执行finish的条件，除了当前状态时NEW，还应当payStatus为已支付
+        if (!orderDTO.getOrderStatus().equals(OrderStatusEnum.NEW.getCode())) {
+            log.error("【完结订单】订单状态不正确，orderId = {}, orderStatus = {}",
+                    orderDTO.getOrderId(), orderDTO.getOrderStatus());
+            throw new SellException(ResultEnum.ORDER_STATUS_ERROR);
+        }
+
+        // 2. 修改状态
+        orderDTO.setOrderStatus(OrderStatusEnum.FINISHED.getCode());
+        OrderMaster orderMaster = new OrderMaster();
+        PropertiesCopyUtils.copyProperties(orderDTO, orderMaster);
+        OrderMaster updateResult = orderMasterRepository.save(orderMaster);
+        if (updateResult == null) {
+            log.error("【完结订单】更新失败，orderMaster = {}", orderMaster);
+            throw new SellException(ResultEnum.ORDER_UPDATE_FAIL);
+        }
+
+        return orderDTO;
     }
 
     /**
@@ -244,7 +262,32 @@ public class OrderServiceImpl implements OrderService {
      * @return DTO
      */
     @Override
+    @Transactional(rollbackOn = {SellException.class})
     public OrderDTO paid(OrderDTO orderDTO) {
-        return null;
+        // 1. 判断订状态
+        if (!orderDTO.getOrderStatus().equals(OrderStatusEnum.NEW.getCode())) {
+            log.error("【支付订单】订单状态不正确，orderId = {}, orderStatus = {}",
+                    orderDTO.getOrderId(), orderDTO.getOrderStatus());
+            throw new SellException(ResultEnum.ORDER_STATUS_ERROR);
+        }
+
+        // 2. 判断订单的支付状态
+        if (!orderDTO.getPayStatus().equals(PayStatusEnum.UNPAID.getCode())) {
+            log.error("【支付订单】订单支付状态不正确, orderId = {}, payStatus = {}",
+                    orderDTO.getOrderId(), orderDTO.getPayStatus());
+            throw new SellException(ResultEnum.ORDER_PAY_STATUS_ERROR);
+        }
+
+        // 3. 修改支付状态
+        orderDTO.setPayStatus(PayStatusEnum.PAID.getCode());
+        OrderMaster orderMaster = new OrderMaster();
+        PropertiesCopyUtils.copyProperties(orderDTO, orderMaster);
+        OrderMaster updateResult = orderMasterRepository.save(orderMaster);
+        if (updateResult == null) {
+            log.error("【支付订单】支付失败，orderMaster = {}", orderMaster);
+            throw new SellException(ResultEnum.ORDER_UPDATE_FAIL);
+        }
+
+        return orderDTO;
     }
 }

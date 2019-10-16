@@ -2,6 +2,7 @@ package com.imooc.service.impl;
 
 import com.imooc.dto.OrderDTO;
 import com.imooc.enums.OrderStatusEnum;
+import com.imooc.enums.PayStatusEnum;
 import com.imooc.model.OrderDetail;
 import com.imooc.utils.SnowFlake;
 import lombok.extern.slf4j.Slf4j;
@@ -123,7 +124,7 @@ public class OrderServiceImplTest {
 
     @Test
     public void cancelTest() {
-        String orderId = "381888827156594688";
+        String orderId = "381888279825088512";
         OrderDTO orderDto = orderService.findOne(orderId);
         OrderDTO result = orderService.cancel(orderDto);
         Assert.assertNotNull(result);
@@ -132,10 +133,22 @@ public class OrderServiceImplTest {
     }
 
     @Test
-    public void finish() {
+    public void finishTest() {
+        String orderId = "381905870677344256";
+        OrderDTO orderDto = orderService.findOne(orderId);
+        OrderDTO result = orderService.finish(orderDto);
+        Assert.assertNotNull(result);
+        Assert.assertEquals(OrderStatusEnum.FINISHED.getCode(),
+                result.getOrderStatus());
     }
 
     @Test
     public void paid() {
+        String orderId = "381905870677344256";
+        OrderDTO orderDto = orderService.findOne(orderId);
+        OrderDTO result = orderService.paid(orderDto);
+        Assert.assertNotNull(result);
+        Assert.assertEquals(PayStatusEnum.PAID.getCode(),
+                result.getPayStatus());
     }
 }
