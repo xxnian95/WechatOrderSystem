@@ -1,5 +1,6 @@
 package com.imooc.service.impl;
 
+import com.imooc.dto.CartDTO;
 import com.imooc.enums.ProductStatusEnum;
 import com.imooc.model.ProductInfo;
 import com.imooc.utils.SnowFlake;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -76,4 +78,22 @@ public class ProductServiceImplTest {
         ProductInfo result = service.save(productInfo);
         Assert.assertNotNull(result);
     }
+
+    @Test
+    public void increaseStockTest() {
+        String productId = "371182675978813440";
+        ProductInfo productInfo = service.findOne(productId);
+        Integer productQuantity = 2;
+        Integer stockResult =
+                productInfo.getProductStock() + productQuantity;
+
+        List<CartDTO> cartDTOList = new ArrayList<>();
+        CartDTO cartDTO = new CartDTO(productId, productQuantity);
+        cartDTOList.add(cartDTO);
+        service.increaseStock(cartDTOList);
+
+        Assert.assertEquals(stockResult,
+                service.findOne(productId).getProductStock());
+    }
+
 }
