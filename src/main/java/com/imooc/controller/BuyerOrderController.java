@@ -15,10 +15,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.HashMap;
@@ -95,12 +92,34 @@ public class BuyerOrderController {
     }
 
     /**
+     * TODO openid未使用，需要用于安全保障
+     *
      * 查看单个订单
      */
+    @GetMapping("/detail")
+    public ResultVO detail(
+            @RequestParam("openid") String openid,
+            @RequestParam("orderId") String orderId) {
+
+        OrderDTO orderDTO = orderService.findOne(orderId);
+        return ResultVOUtil.success(orderDTO);
+
+    }
 
     /**
+     * TODO openid未使用，需要用于安全保障
+     *
      * 取消订单
      */
+    @PostMapping("/cancel")
+    public ResultVO cancel(
+            @RequestParam("openid") String openid,
+            @RequestParam("orderId") String orderId) {
 
+        OrderDTO orderDTO = orderService.findOne(orderId);
+        OrderDTO cancelResult = orderService.cancel(orderDTO);
+        return ResultVOUtil.success(cancelResult);
+
+    }
 
 }
