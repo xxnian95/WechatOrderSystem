@@ -218,10 +218,6 @@ public class OrderServiceImpl implements OrderService {
             // TODO 退款
         }
 
-        /*
-        这里如果直接返回orderDTO，对象中的订单状态并不会改变。需要重新从数据库中读取信息并
-        返回（我也不知道这是为啥）。
-         */
         return orderDTO;
     }
 
