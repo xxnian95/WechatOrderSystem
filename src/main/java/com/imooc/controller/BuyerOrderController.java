@@ -4,6 +4,7 @@ import com.imooc.dto.OrderDTO;
 import com.imooc.enums.ResultEnum;
 import com.imooc.exception.SellException;
 import com.imooc.form.OrderForm;
+import com.imooc.service.BuyerService;
 import com.imooc.service.OrderService;
 import com.imooc.utils.OrderForm2OrderDTOConverter;
 import com.imooc.utils.ResultVOUtil;
@@ -32,10 +33,13 @@ public class BuyerOrderController {
 
     private final OrderService orderService;
 
+    private final BuyerService buyerService;
+
     private final SnowFlake snowFlake;
 
-    public BuyerOrderController(OrderService orderService, SnowFlake snowFlake) {
+    public BuyerOrderController(OrderService orderService, BuyerService buyerService, SnowFlake snowFlake) {
         this.orderService = orderService;
+        this.buyerService = buyerService;
         this.snowFlake = snowFlake;
     }
 
@@ -92,8 +96,6 @@ public class BuyerOrderController {
     }
 
     /**
-     * TODO openid未使用，需要用于安全保障
-     *
      * 查看单个订单
      */
     @GetMapping("/detail")
@@ -101,9 +103,8 @@ public class BuyerOrderController {
             @RequestParam("openid") String openid,
             @RequestParam("orderId") String orderId) {
 
-        OrderDTO orderDTO = orderService.findOne(orderId);
+        OrderDTO orderDTO = buyerService.findOrderOne(openid, orderId);
         return ResultVOUtil.success(orderDTO);
-
     }
 
     /**
@@ -116,10 +117,8 @@ public class BuyerOrderController {
             @RequestParam("openid") String openid,
             @RequestParam("orderId") String orderId) {
 
-        OrderDTO orderDTO = orderService.findOne(orderId);
-        OrderDTO cancelResult = orderService.cancel(orderDTO);
+        OrderDTO cancelResult = buyerService.cancelOrder(openid, orderId);
         return ResultVOUtil.success(cancelResult);
-
     }
 
 }
